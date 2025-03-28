@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 import logging
-logging.basicConfig(level=logging.INFO,format='[(asctime)s]:%(messgae)s:')
+
 
 project_name = "testsummarizer"
 list_of_files = [
@@ -28,16 +28,17 @@ list_of_files = [
 
 for filepath in list_of_files:
     filepath = Path(filepath)
-    if not filepath.parent.exists():
-        logging.info(f"Creating directory: {filepath.parent} for file: {filepath.name}")
-        os.makedirs(filepath.parent)
-
-    if not filepath.exists() or os.path.getsize(filepath) == 0:
-        logging.info(f"Creating file: {filepath}")
-        filepath.touch()
+    filedir , filename = os.path.split(filepath)
+    
+    if not os.path.exists(filedir):
+        os.makedirs(filedir)
+        logging.info(f"Directory created for {filedir}")
+    
+    if not os.path.exists(filepath) or os.path.getsize(filepath) == 0:
+        with open(filepath, "w") as file:
+            pass
+            logging.info(f"File created for {filepath}")
     else:
-        logging.warning(f"File already exists: {filepath}")
-        continue    # Skip if file already exists       
-logging.info("Project structure created successfully!")
-
+        logging.info(f"File already exists for {filepath}")
+        
     
